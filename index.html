@@ -37,7 +37,23 @@
 
         .header p {
             font-size: 1.1em;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .header-links {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .header-links a {
+            color: white;
+            text-decoration: underline;
+            margin: 0 10px;
+            transition: opacity 0.3s;
+        }
+
+        .header-links a:hover {
+            opacity: 0.8;
         }
 
         /* AdSense placeholder - Top Banner */
@@ -203,6 +219,11 @@
             transform: scale(0.95);
         }
 
+        .tax-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
         .tax-rate-display {
             width: 60px;
             text-align: center;
@@ -275,6 +296,24 @@
             line-height: 1.6;
         }
 
+        .footer-links {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: underline;
+            margin: 0 15px;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
         /* AdSense placeholder - Bottom Banner */
         .ad-banner-bottom {
             background: rgba(255, 255, 255, 0.9);
@@ -311,6 +350,10 @@
     <div class="header">
         <h1>🧮 Tax Calculator</h1>
         <p>Free online calculator with automatic tax calculation for all your needs</p>
+        <div class="header-links">
+            <a href="privacy.html">Privacy Policy</a> | 
+            <a href="terms.html">Terms of Service</a>
+        </div>
     </div>
 
     <!-- AdSense Ad Slot - Top Banner (728x90 or responsive) -->
@@ -403,14 +446,26 @@
             <p>
                 Our free online tax calculator helps you quickly calculate totals with sales tax included. 
                 Perfect for retail, shopping, or any situation where you need to add tax to a price. 
-                You can customize the tax rate to match your local sales tax rate (ranging from 4% to 14%) 
+                You can customize the tax rate to match your local sales tax rate (ranging from 0% to 14%) 
                 and enable automatic tax calculation for all your computations.
             </p>
             <p style="margin-top: 15px;">
                 <strong>Features:</strong> Basic arithmetic operations (addition, subtraction, multiplication, division), 
-                percentage calculations, automatic tax calculation, customizable tax rates, and a user-friendly interface 
+                percentage calculations, automatic tax calculation, customizable tax rates from 0% to 14%, and a user-friendly interface 
                 that works on all devices.
             </p>
+            
+            <!-- Legal Links -->
+            <div class="footer-links">
+                <p style="font-size: 1em; margin-bottom: 10px;">
+                    <a href="privacy.html">Privacy Policy</a> | 
+                    <a href="terms.html">Terms of Service</a>
+                </p>
+                <p style="margin-top: 15px; font-size: 0.9em; opacity: 0.9;">
+                    © 2025 Tax Calculator. All rights reserved.<br>
+                    <a href="https://github.com/GABDM01/tax-calculator-web" target="_blank">View on GitHub</a>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -439,7 +494,7 @@
         let taxEnabled = false;
         let taxRate = 8.5;
         const taxRates = [
-            4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5,
+            0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5,
             9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0
         ];
         let currentTaxIndex = taxRates.indexOf(8.5);
@@ -451,6 +506,12 @@
         const taxDown = document.getElementById('taxDown');
         const taxUp = document.getElementById('taxUp');
 
+        // Update button states
+        function updateTaxButtons() {
+            taxDown.disabled = currentTaxIndex === 0;
+            taxUp.disabled = currentTaxIndex === taxRates.length - 1;
+        }
+
         // Event listeners
         taxSwitch.addEventListener('change', function() {
             taxEnabled = this.checked;
@@ -461,6 +522,7 @@
                 currentTaxIndex--;
                 taxRate = taxRates[currentTaxIndex];
                 taxRateDisplay.textContent = taxRate;
+                updateTaxButtons();
             }
         });
 
@@ -469,8 +531,12 @@
                 currentTaxIndex++;
                 taxRate = taxRates[currentTaxIndex];
                 taxRateDisplay.textContent = taxRate;
+                updateTaxButtons();
             }
         });
+
+        // Initialize button states
+        updateTaxButtons();
 
         // Handle button clicks
         function handleButton(action) {
