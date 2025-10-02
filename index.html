@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - Free Online Calculator with Tax Calculation</title>
+    <meta name="description" content="Free online calculator with automatic tax calculation. Calculate totals with sales tax, adjust tax rates, and perform basic arithmetic operations.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        /* AdSense placeholder - Top Banner */
+        .ad-banner-top {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            max-width: 728px;
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .calculator-wrapper {
+            background: #f0f0f0;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 375px;
+            width: 100%;
+        }
+
+        /* AdSense placeholder - Sidebar */
+        .ad-sidebar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 600px;
+            width: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .display {
+            width: 100%;
+            height: 60px;
+            font-size: 32px;
+            text-align: right;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: white;
+            margin-bottom: 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tax-settings {
+            background: #e8e8e8;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tax-settings h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .tax-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .tax-rate-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tax-rate-control label {
+            font-weight: 500;
+        }
+
+        .tax-rate-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tax-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+            border: 1px solid #999;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tax-btn:hover {
+            background: #ddd;
+        }
+
+        .tax-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tax-rate-display {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #999;
+            border-radius: 5px;
+            background: white;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+
+        .btn {
+            height: 60px;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-number {
+            background: #d1d1d1;
+            color: black;
+        }
+
+        .btn-operator {
+            background: #ff9500;
+            color: white;
+        }
+
+        .btn-tax {
+            background: #add8e6;
+            color: black;
+        }
+
+        .btn-zero {
+            grid-column: span 2;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+        }
+
+        .footer h2 {
+            margin-bottom: 15px;
+        }
+
+        .footer-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        /* AdSense placeholder - Bottom Banner */
+        .ad-banner-bottom {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            max-width: 728px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .ad-sidebar {
+                width: 100%;
+                min-height: 250px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .ad-banner-top, .ad-banner-bottom {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧮 Tax Calculator</h1>
+        <p>Free online calculator with automatic tax calculation for all your needs</p>
+    </div>
+
+    <!-- AdSense Ad Slot - Top Banner (728x90 or responsive) -->
+    <div class="ad-banner-top">
+        <!-- Replace with your AdSense code -->
+        <p>Advertisement Space (728x90)</p>
+        <!-- Example AdSense code:
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:728px;height:90px"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        -->
+    </div>
+
+    <div class="container">
+        <div class="calculator-wrapper">
+            <div class="display" id="display">0</div>
+            
+            <div class="tax-settings">
+                <h3>Tax Settings</h3>
+                <div class="tax-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="taxSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Enable Automatic Tax</span>
+                </div>
+                <div class="tax-rate-control">
+                    <label>Tax Rate (%):</label>
+                    <div class="tax-rate-buttons">
+                        <button class="tax-btn" id="taxDown">&lt;</button>
+                        <div class="tax-rate-display" id="taxRateDisplay">8.5</div>
+                        <button class="tax-btn" id="taxUp">&gt;</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-number" onclick="handleButton('clear')">C</button>
+                <button class="btn btn-number" onclick="handleButton('plus_minus')">±</button>
+                <button class="btn btn-number" onclick="handleButton('percent')">%</button>
+                <button class="btn btn-operator" onclick="handleButton('divide')">÷</button>
+
+                <button class="btn btn-number" onclick="handleButton('7')">7</button>
+                <button class="btn btn-number" onclick="handleButton('8')">8</button>
+                <button class="btn btn-number" onclick="handleButton('9')">9</button>
+                <button class="btn btn-operator" onclick="handleButton('multiply')">×</button>
+
+                <button class="btn btn-number" onclick="handleButton('4')">4</button>
+                <button class="btn btn-number" onclick="handleButton('5')">5</button>
+                <button class="btn btn-number" onclick="handleButton('6')">6</button>
+                <button class="btn btn-operator" onclick="handleButton('subtract')">-</button>
+
+                <button class="btn btn-number" onclick="handleButton('1')">1</button>
+                <button class="btn btn-number" onclick="handleButton('2')">2</button>
+                <button class="btn btn-number" onclick="handleButton('3')">3</button>
+                <button class="btn btn-operator" onclick="handleButton('add')">+</button>
+
+                <button class="btn btn-number btn-zero" onclick="handleButton('0')">0</button>
+                <button class="btn btn-number" onclick="handleButton('decimal')">.</button>
+                <button class="btn btn-operator" onclick="handleButton('equals')">=</button>
+                <button class="btn btn-tax" onclick="handleButton('tax')">Tax</button>
+            </div>
+        </div>
+
+        <!-- AdSense Ad Slot - Sidebar (300x600 or 300x250) -->
+        <div class="ad-sidebar">
+            <!-- Replace with your AdSense code -->
+            <p>Advertisement Space (300x600)</p>
+            <!-- Example AdSense code:
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:600px"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <h2>About This Tax Calculator</h2>
+            <p>
+                Our free online tax calculator helps you quickly calculate totals with sales tax included. 
+                Perfect for retail, shopping, or any situation where you need to add tax to a price. 
+                You can customize the tax rate to match your local sales tax rate (ranging from 4% to 14%) 
+                and enable automatic tax calculation for all your computations.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Features:</strong> Basic arithmetic operations (addition, subtraction, multiplication, division), 
+                percentage calculations, automatic tax calculation, customizable tax rates, and a user-friendly interface 
+                that works on all devices.
+            </p>
+        </div>
+    </div>
+
+    <!-- AdSense Ad Slot - Bottom Banner (728x90 or responsive) -->
+    <div class="ad-banner-bottom">
+        <!-- Replace with your AdSense code -->
+        <p>Advertisement Space (728x90)</p>
+        <!-- Example AdSense code:
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:728px;height:90px"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        -->
+    </div>
+
+    <script>
+        // Calculator state
+        let displayValue = "0";
+        let currentValue = 0;
+        let operation = null;
+        let newNumber = true;
+        let taxEnabled = false;
+        let taxRate = 8.5;
+        const taxRates = [
+            4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5,
+            9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0
+        ];
+        let currentTaxIndex = taxRates.indexOf(8.5);
+
+        // DOM elements
+        const display = document.getElementById('display');
+        const taxSwitch = document.getElementById('taxSwitch');
+        const taxRateDisplay = document.getElementById('taxRateDisplay');
+        const taxDown = document.getElementById('taxDown');
+        const taxUp = document.getElementById('taxUp');
+
+        // Event listeners
+        taxSwitch.addEventListener('change', function() {
+            taxEnabled = this.checked;
+        });
+
+        taxDown.addEventListener('click', function() {
+            if (currentTaxIndex > 0) {
+                currentTaxIndex--;
+                taxRate = taxRates[currentTaxIndex];
+                taxRateDisplay.textContent = taxRate;
+            }
+        });
+
+        taxUp.addEventListener('click', function() {
+            if (currentTaxIndex < taxRates.length - 1) {
+                currentTaxIndex++;
+                taxRate = taxRates[currentTaxIndex];
+                taxRateDisplay.textContent = taxRate;
+            }
+        });
+
+        // Handle button clicks
+        function handleButton(action) {
+            if (!isNaN(action)) {
+                // Number button
+                if (newNumber || displayValue === "0") {
+                    displayValue = action;
+                    newNumber = false;
+                } else {
+                    displayValue += action;
+                }
+            } else if (action === "decimal") {
+                if (newNumber) {
+                    displayValue = "0.";
+                    newNumber = false;
+                } else if (!displayValue.includes(".")) {
+                    displayValue += ".";
+                }
+            } else if (action === "clear") {
+                displayValue = "0";
+                currentValue = 0;
+                operation = null;
+                newNumber = true;
+            } else if (action === "plus_minus") {
+                if (displayValue !== "0") {
+                    if (displayValue.startsWith("-")) {
+                        displayValue = displayValue.substring(1);
+                    } else {
+                        displayValue = "-" + displayValue;
+                    }
+                }
+            } else if (action === "percent") {
+                const current = parseFloat(displayValue);
+                const result = current / 100;
+                displayValue = result.toString();
+            } else if (["add", "subtract", "multiply", "divide"].includes(action)) {
+                currentValue = parseFloat(displayValue);
+                operation = action;
+                newNumber = true;
+            } else if (action === "equals") {
+                calculateResult();
+            } else if (action === "tax") {
+                calculateTax();
+            }
+
+            updateDisplay();
+        }
+
+        function calculateResult() {
+            try {
+                const current = parseFloat(displayValue);
+                let result;
+
+                if (operation === "add") {
+                    result = currentValue + current;
+                } else if (operation === "subtract") {
+                    result = currentValue - current;
+                } else if (operation === "multiply") {
+                    result = currentValue * current;
+                } else if (operation === "divide") {
+                    if (current !== 0) {
+                        result = currentValue / current;
+                    } else {
+                        displayValue = "Error";
+                        updateDisplay();
+                        return;
+                    }
+                } else {
+                    result = current;
+                }
+
+                // Apply tax if enabled
+                if (taxEnabled) {
+                    const taxAmount = result * (taxRate / 100);
+                    result += taxAmount;
+                }
+
+                // Format result
+                if (Number.isInteger(result)) {
+                    displayValue = result.toString();
+                } else {
+                    displayValue = parseFloat(result.toFixed(8)).toString();
+                }
+
+                currentValue = result;
+                operation = null;
+                newNumber = true;
+            } catch (e) {
+                displayValue = "Error";
+                newNumber = true;
+            }
+        }
+
+        function calculateTax() {
+            try {
+                const current = parseFloat(displayValue);
+                const taxAmount = current * (taxRate / 100);
+                const totalWithTax = current + taxAmount;
+
+                // Format result
+                if (Number.isInteger(totalWithTax)) {
+                    displayValue = totalWithTax.toString();
+                } else {
+                    displayValue = parseFloat(totalWithTax.toFixed(8)).toString();
+                }
+
+                newNumber = true;
+            } catch (e) {
+                displayValue = "Error";
+                newNumber = true;
+            }
+        }
+
+        function updateDisplay() {
+            display.textContent = displayValue;
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (!isNaN(key)) {
+                handleButton(key);
+            } else if (key === '.') {
+                handleButton('decimal');
+            } else if (key === '+') {
+                handleButton('add');
+            } else if (key === '-') {
+                handleButton('subtract');
+            } else if (key === '*') {
+                handleButton('multiply');
+            } else if (key === '/') {
+                event.preventDefault();
+                handleButton('divide');
+            } else if (key === 'Enter' || key === '=') {
+                event.preventDefault();
+                handleButton('equals');
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                handleButton('clear');
+            } else if (key === '%') {
+                handleButton('percent');
+            }
+        });
+    </script>
+</body>
+</html>
