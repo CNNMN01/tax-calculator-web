@@ -15,7 +15,7 @@ A free, responsive online calculator with automatic tax calculation functionalit
 
 ## 🚀 Live Demo
 
-Visit the live calculator: [https://yourusername.github.io/tax-calculator-web/](https://yourusername.github.io/tax-calculator-web/)
+Visit the live calculator: [https://tax-calc-web.netlify.app/](https://tax-calc-web.netlify.app/)
 
 ## 📋 How to Use
 
